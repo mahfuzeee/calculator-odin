@@ -1,4 +1,4 @@
-let result = NaN;
+let result = undefined;
 function add(a, b) {
     return parseFloat(a + b);
 }
@@ -37,19 +37,56 @@ function operate(num1, operator, num2 ) {
 //operate(6.8, '+', 4);
 console.log(result);
 
-const screen = document.querySelector("#display");
-const buttons = document.querySelectorAll("button");
+const screen = document.getElementById("display");
+const numbersBtn = document.querySelectorAll(".number");
+const operatorBtn = document.querySelectorAll(".operator");
+const clearAllBtn = document.getElementById('AC');
+const clearBtn = document.getElementById('C');
+const equalTo = document.getElementById('=');
+console.log(operatorBtn[2]);
+console.log(numbersBtn);
 
 let operator;
 let firstNum ;
 let secondNum ;
 let isTyping = false;
 
-buttons.forEach((button) => {
+function clearAll() {
+    screen.value = '';
+    firstNum = '';
+    secondNum = '';
+}
+
+clearAllBtn.addEventListener('click', () => {
+    clearAll();
+});
+
+clearBtn.addEventListener('click', () => {
+    screen.value = screen.value.slice(0, -1);
+});
+
+numbersBtn.forEach((button) => {
     button.addEventListener('click', (event) => {
         let typedButton = event.target.textContent;
+        screen.value += typedButton;
         
-        switch (typedButton) {
+                secondNum = parseFloat(screen.value.slice(screen.value.indexOf(operator)+1));
+                operate(firstNum,operator,secondNum);
+                //screen.value = result;
+                isTyping = false;
+                console.log(firstNum);
+                console.log(secondNum);
+                console.log(operator);
+                console.log(result);
+        
+    });
+});
+
+operatorBtn.forEach((button) => {
+    button.addEventListener('click', (event) => {
+        let typedOperator = event.target.textContent;
+
+        switch (typedOperator) {
             case 'AC':
                 screen.value = '';
                 break;
@@ -59,7 +96,7 @@ buttons.forEach((button) => {
             case '+':
                 if(!isTyping) {
                     operator = '+';
-                    screen.value += typedButton;
+                    screen.value += typedOperator;
                     firstNum = parseFloat(screen.value.slice(0, -1));
                     isTyping = true;
                 } 
@@ -67,7 +104,7 @@ buttons.forEach((button) => {
             case '/':
                 if(!isTyping) {
                     operator = '/';
-                    screen.value += typedButton;
+                    screen.value += typedOperator;
                     firstNum = parseFloat(screen.value.slice(0, -1));
                     isTyping = true;
                 }
@@ -75,7 +112,7 @@ buttons.forEach((button) => {
             case '-':
                 if(!isTyping) {
                     operator = '-';
-                    screen.value += typedButton;
+                    screen.value += typedOperator;
                     firstNum = parseFloat(screen.value.slice(0, -1));
                     isTyping = true;
                 }
@@ -83,28 +120,21 @@ buttons.forEach((button) => {
             case '*':
                 if(!isTyping) {
                     operator = '*';
-                    screen.value += typedButton;
+                    screen.value += typedOperator;
                     firstNum = parseFloat(screen.value.slice(0, -1));
                     isTyping = true;
                 }
                 break;
-            case '=':
-                secondNum = parseFloat(screen.value.slice(screen.value.indexOf(operator)+1));
-                operate(firstNum,operator,secondNum);
-                screen.value = result;
-                isTyping = false;
-                console.log(firstNum);
-                console.log(secondNum);
-                console.log(operator);
-                console.log(result);
-                break;
-
-            default:
-                screen.value += typedButton;
-        }
-        
-        
+            }
     });
 });
+
+equalTo.addEventListener('click', () => {
+    secondNum = parseFloat(screen.value.slice(screen.value.indexOf(operator)+1));
+    operate(firstNum,operator,secondNum);
+    clearAll();
+    screen.value = result;
+    isTyping = false;
+})
 
 console.log(screen);
