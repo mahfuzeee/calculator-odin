@@ -10,11 +10,14 @@ function subtract(a, b) {
 }
 
 function multiply(a, b) {
-    return a * b;
+    let result = a * b;
+    return result.toFixed(3);
 }
 
 function divide(a, b) {
-    let result =  a / b;
+    let result;
+    if(b == 0) result = 0;
+    else result =  a / b;
     return result.toFixed(3);
 }
 
@@ -68,14 +71,22 @@ function clearAll() {
 function calculate() {
     if(isOperatorTyped) {
         secondNum = parseFloat(screen.value.slice(screen.value.indexOf(operator)+1));
-    } else {
+    } 
+    if(Number.isNaN(secondNum)) {
         secondNum = 0;
     }
-    if(firstNum) firstNum = firstNum;
-    else firstNum = 0;
+    else {
+        secondNum = secondNum;
+    }
+    if(Number.isNaN(firstNum)) {
+        firstNum = 0;
+        console.log(firstNum);
+    }
+    else {firstNum = firstNum;}
 
+    console.log(`First ${firstNum} and second ${secondNum}`);
     operate(firstNum, operator, secondNum);
-    console.log(result);
+    console.log(`Result is ${result}`);
     clearAll();
     screen.value = result;
     //else screen.value = "Error";
@@ -119,7 +130,12 @@ operatorBtn.forEach((button) => {
         let typedOperator = event.target.textContent;
         function updateScreen() {
             screen.value += typedOperator;
-            firstNum = parseFloat(screen.value.slice(0, -1));
+            if(screen.value.length > 0) {
+                firstNum = parseFloat(screen.value.slice(0, -1));
+            } else {
+                firstNum = 0;
+            }
+
             isOperatorTyped = true;
         }
 
